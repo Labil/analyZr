@@ -87,8 +87,8 @@ var visualizeWords = function(){
                     reserveFields(i, wSpan, hSpan);
                     return i;
                 }
-                else
-                    continue;
+                //else
+                  //  continue;
             }
         }
         console.log("No space for the word was found");
@@ -100,10 +100,10 @@ var visualizeWords = function(){
         for(var i = 0; i < wSpan; i++){
             console.log("Reserving field width " + index + i)
             fields[index + i] = false;      
-        }
-        for(var j = 1; j < hSpan; j++){
-            console.log("Reserving field height: " + (index + (nCols *j)) );
-            fields[index + (nCols * j)] = false;
+            for(var j = 1; j < hSpan; j++){
+                console.log("Reserving field height: " + (index + i + (nCols *j)) );
+                fields[index + i + (nCols * j)] = false;
+            }
         } 
     };
 
@@ -114,7 +114,7 @@ var visualizeWords = function(){
                 return false;
             }
             for(var j = 1; j < hSpan; j++){
-                if(fields[index + (nCols * i)] == false){
+                if(fields[index + (nCols * j)] == false){
                     console.log("Word didn't fit in height.")
                     return false;
                 }
