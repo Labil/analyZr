@@ -75,6 +75,7 @@ var visualizeWords = function(){
         for(var i = 0; i < wField * hField; i++){
             fields.push(true);
         }
+        //console.log("Fields length: " +fields.length);
     }();
 
     //Looks for space in the csv to put the word
@@ -84,6 +85,7 @@ var visualizeWords = function(){
         for(var i = 1; i < fields.length; i++){
             if(fields[i] == true){
                 if(checkSubsequentFields(i, wSpan, hSpan)){
+                    console.log("Index to res field at: " + i);
                     reserveFields(i, wSpan, hSpan);
                     return i;
                 }
@@ -96,57 +98,59 @@ var visualizeWords = function(){
     
     };
 
-    var reserveFields = function(index, wSpan, hSpan){
-        for(var i = 0; i < wSpan; i++){
-            console.log("Reserving field width " + index + i)
-            fields[index + i] = false;      
-            for(var j = 1; j < hSpan; j++){
-                console.log("Reserving field height: " + (index + i + (nCols *j)) );
-                fields[index + i + (nCols * j)] = false;
-            }
-        } 
-    };
-
     var checkSubsequentFields = function(index, wSpan, hSpan){
         for(var i = 0; i < wSpan; i++){
             if(fields[index + i] == false){
-                console.log("Word didn't fit in width.");
+                //console.log("Word didn't fit in width.");
                 return false;
             }
-            for(var j = 1; j < hSpan; j++){
-                if(fields[index + (nCols * j)] == false){
+            for(var j = 1; j < 3; j++){
+                var lul = index + i + (nRows * j);
+                if(fields[lul] == false){
                     console.log("Word didn't fit in height.")
                     return false;
                 }
-            }      
+            }     
         }
         console.log("Word fit here!");
         return true;
     };
+
+    var reserveFields = function(index, wSpan, hSpan){
+        for(var i = 0; i < wSpan; i++){
+            var lu = index + i;
+            fields[lu] = false;
+            for(var j = 1; j < 3; j++){
+                var lul = index + i + (nRows * j);
+                console.log("Reserving field height: " + lul);
+                fields[lul] = false;
+            }      
+        } 
+    };
+
     //In field units
     //TODO: fix size adjustment
     var calcWordSpan = function(d){
         var wordspan = {};
-        wordspan.x = Math.ceil((Math.ceil(d.word.length * d.frequency * 10)) / wField); 
-        wordspan.y = Math.ceil(Math.ceil(d.frequency * 10) / hField);
-        console.log("Wordspan is: " + wordspan.x + "," + wordspan.y);
+        wordspan.w = Math.ceil((Math.ceil(d.word.length * d.frequency * 5)) / wField); 
+        wordspan.h = Math.ceil(Math.ceil(d.frequency * 5) / hField);
+        console.log("Wordspan is: " + wordspan.w + "," + wordspan.h);
         return wordspan;
     };
-    //In pixels
+    //Pos in pixels
     var getPosition = function(d){
         var wordspan = calcWordSpan(d);
-        console.log("Wordspan.y: " + wordspan.y);
-        var fieldIndex = queryField(wordspan.x, wordspan.y);
+        var fieldIndex = queryField(wordspan.w, wordspan.h);
         var pos = {};
         if(fieldIndex != -1){
             var col = fieldIndex % nCols;
-            var row = Math.floor(nRows/fieldIndex);
+            var row = Math.floor(fieldIndex/nRows);
             pos.x = Math.round((w/nCols) * col);
-            pos.y = h - (Math.round((h/nRows) * row)) + (wordspan.y * hField); //trap: division by 0, see above
+            pos.y = h - (Math.round((h/nRows) * row));
             return pos;
         }
         else{
-            console.log("No position was found");
+           // console.log("No position was found");
             return { "x" : 0, "y" : 0};
         }
     };
@@ -164,12 +168,10 @@ var visualizeWords = function(){
             tempPos = getPosition(d);
             savedYPositions.push(tempPos.y);
             return tempPos.x;
-           // return getRandomNumber(0, w);
         })
         .attr("y", function(d, i){
-            console.log("Saved y position at index " + i + ": " + savedYPositions[i]);
+//            console.log("Saved y position at index " + i + ": " + savedYPositions[i]);
             return savedYPositions[i];
-            //return getRandomNumber(0, h);
         })
         .attr("font-family", "Comic Sans MS")
         .attr("font-size", function(d){
@@ -181,7 +183,6 @@ var visualizeWords = function(){
 
 var getRandomNumber = function(min, max){
     var rand = Math.floor(Math.random() * (max - min + 1) + min);
-    //console.log(rand);
     return rand;
 };
 
