@@ -1,9 +1,25 @@
 var getWords = function(){
+
+    var scaleMinRepeat = function(dataset){
+        if(dataset > 1000) return 8;
+        if(dataset > 800) return 6;
+        if(dataset > 600) return 4;
+        if(dataset > 400) return 2;
+        if(dataset > 200) return 1;
+        else return 1;
+    };
+
     //trim() removes whitespace from both sides of string
     var words = document.getElementById("textfield").value.toLowerCase().trim().replace(/[,;.!]/g,'').split(/[\s\/]+/g).sort();
     
-    var ignore = ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 'be', 'has', 'if'];
-    
+    var ignore = ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
+        'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 'be', 'has', 'if'];
+   /* var ignore = ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 'to', 
+        'tre', 'kanskje', 'ganske', 'av', 'de', 'dro', 'fikk', 'på', 'så', 'som', 'hadde',
+        'men', 'om', 'så', 'å', 'på', 'veldig', 'rundt', 'masse', 'at', 'bare', 'ble', 'det',
+        'er', 'etter', 'for', 'i', 'gikk', 'ha', 'ham', 'han', 'har', 'ikke', 'kom', 'sa',
+        'seg', 'meg', 'skulle', 'ville', '-', 'måtte', 'andre'];*/
+
     var filtered = words.filter(function(val){
         for(var i = 0; i < ignore.length; i++){
             if(ignore[i] == val) return false;
@@ -23,11 +39,14 @@ var getWords = function(){
         frequency[w]++;    
     }
 
+    var minRepeat = scaleMinRepeat(wordsCount);
+    //minRepeat = 3;
+
     var jsonFreq = [];
     for(var key in frequency){
         if (!frequency.hasOwnProperty(key)) continue;
 
-        if (frequency[key] > 1) {
+        if (frequency[key] > minRepeat) {
             jsonFreq.push( { "word" : key, "frequency" : frequency[key] } );
         }
 
@@ -38,36 +57,35 @@ var getWords = function(){
 
 var visualizeWords = function(){
 
-    var w = 500;
-    var h = 300;
-    var frameW = 400;
-    var frameH = 200;
+    var w = 800;
+    var h = 600;
+    var frameW = 600;
+    var frameH = 500;
   
     var dataset = getWords().slice();
     console.log("Dataset length: " + dataset.length);
     var svg = d3.select("body").append("svg");
     svg.attr("width", w)
         .attr("height", h);
+    svg.append("rect")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("fill", "black");
 
     var fill = d3.scale.category20();
 
-    var xScale = d3.scale.linear()
-        .domain([0, d3.max(dataset, function(d){
-            return d.frequency;
-        })])
-        .range([0, w]);
-
-    var yScale = d3.scale.linear()
-        .domain([0, d3.max(dataset, function(d) { return d.frequency; })])
-        .range([h, 0]);
-
-    var rScale = d3.scale.linear()
-        .domain([0, d3.max(dataset, function(d) { return d.frequency; })])
-        .range([2, 5]);
-
     var fontScale = d3.scale.linear()
-        .domain([0, d3.max(dataset, function(d) { return d.frequency; })])
-        .range([14, 60]);
+        .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
+        .range([10, 80]);
+
+    var wSpanScale = d3.scale.linear()
+        .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
+        .range([10, 45]);
+
+    var hSpanScale = d3.scale.linear()
+        .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
+        .range([20, 70]);
+
 
     var nCols, nRows, wField, hField;
     var fields = [];
@@ -91,7 +109,6 @@ var visualizeWords = function(){
         for(var i = 1; i < fields.length; i++){
             if(fields[i] == true){
                 if(checkSubsequentFields(i, wSpan, hSpan)){
-                    console.log("Index to res field at: " + i);
                     reserveFields(i, wSpan, hSpan);
                     return i;
                 }
@@ -110,7 +127,6 @@ var visualizeWords = function(){
             for(var j = 1; j < hSpan; j++){
                 var lul = index + i + (nRows * j);
                 if(fields[lul] == false){
-                    console.log("Word didn't fit in height.")
                     return false;
                 }
             }     
@@ -120,24 +136,23 @@ var visualizeWords = function(){
     };
 
     var reserveFields = function(index, wSpan, hSpan){
+        console.log("Reserving field from index: " + index + " and wSpan: " + wSpan + ", hSpan: " + hSpan);
         for(var i = 0; i < wSpan; i++){
             var lu = index + i;
-            console.log("Reserving field width: " + lu);
             fields[lu] = false;
             for(var j = 1; j < hSpan; j++){
                 var lul = index + i + (nRows * j);
-                console.log("Reserving field height: " + lul);
                 fields[lul] = false;
             }      
         } 
     };
 
     //In field units
-    //TODO: fix size adjustment
     var calcWordSpan = function(d){
         var wordspan = {};
-        var multiplierW = d.frequency * 5;
-        var multiplierH = d.frequency * 10;
+        console.log("d.Frequency: " + d.frequency);
+        var multiplierW = wSpanScale(d.frequency);
+        var multiplierH = hSpanScale(d.frequency);
         wordspan.w = Math.ceil((d.word.length * multiplierW) / wField); 
         wordspan.h = Math.ceil(multiplierH / hField);
         console.log("Wordspan is: " + wordspan.w + "," + wordspan.h);
@@ -152,11 +167,10 @@ var visualizeWords = function(){
             var row = Math.floor(fieldIndex/nCols);
             var col = (fieldIndex + nCols) % nCols;
             pos.x = (wField * col);
-            pos.y = (hField * row) + 40;
+            pos.y = 50 + (hField * row) + hSpanScale(d.frequency) ;
             return pos;
         }
         else{
-           // console.log("No position was found");
             return { "x" : 0, "y" : 0};
         }
     };
@@ -176,12 +190,11 @@ var visualizeWords = function(){
             return tempPos.x;
         })
         .attr("y", function(d, i){
-//            console.log("Saved y position at index " + i + ": " + savedYPositions[i]);
             return savedYPositions[i];
         })
         .attr("font-family", "Comic Sans MS")
         .attr("font-size", function(d){
-            //return d.frequency * 10;
+           //console.log("Frequency: " + d.frequency + ", font-size: " + fontScale(d.frequency));
             return fontScale(d.frequency);
             //return 30;
         })
