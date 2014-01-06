@@ -40,6 +40,8 @@ var visualizeWords = function(){
 
     var w = 500;
     var h = 300;
+    var frameW = 400;
+    var frameH = 200;
   
     var dataset = getWords().slice();
     console.log("Dataset length: " + dataset.length);
@@ -63,19 +65,23 @@ var visualizeWords = function(){
         .domain([0, d3.max(dataset, function(d) { return d.frequency; })])
         .range([2, 5]);
 
+    var fontScale = d3.scale.linear()
+        .domain([0, d3.max(dataset, function(d) { return d.frequency; })])
+        .range([14, 60]);
+
     var nCols, nRows, wField, hField;
     var fields = [];
 
     var setupFields = function(){
         nCols = dataset.length;
         nRows = dataset.length;
-        wField = w / nCols;
-        hField = h / nRows;
+        wField = Math.round(frameW / nCols);
+        hField = Math.round(frameH / nRows);
+        console.log("width per field: " + wField + ", height per field: " + hField);
 
         for(var i = 0; i < wField * hField; i++){
             fields.push(true);
         }
-        //console.log("Fields length: " +fields.length);
     }();
 
     //Looks for space in the csv to put the word
@@ -89,8 +95,6 @@ var visualizeWords = function(){
                     reserveFields(i, wSpan, hSpan);
                     return i;
                 }
-                //else
-                  //  continue;
             }
         }
         console.log("No space for the word was found");
@@ -101,10 +105,9 @@ var visualizeWords = function(){
     var checkSubsequentFields = function(index, wSpan, hSpan){
         for(var i = 0; i < wSpan; i++){
             if(fields[index + i] == false){
-                //console.log("Word didn't fit in width.");
                 return false;
             }
-            for(var j = 1; j < 3; j++){
+            for(var j = 1; j < hSpan; j++){
                 var lul = index + i + (nRows * j);
                 if(fields[lul] == false){
                     console.log("Word didn't fit in height.")
@@ -119,8 +122,9 @@ var visualizeWords = function(){
     var reserveFields = function(index, wSpan, hSpan){
         for(var i = 0; i < wSpan; i++){
             var lu = index + i;
+            console.log("Reserving field width: " + lu);
             fields[lu] = false;
-            for(var j = 1; j < 3; j++){
+            for(var j = 1; j < hSpan; j++){
                 var lul = index + i + (nRows * j);
                 console.log("Reserving field height: " + lul);
                 fields[lul] = false;
@@ -132,8 +136,10 @@ var visualizeWords = function(){
     //TODO: fix size adjustment
     var calcWordSpan = function(d){
         var wordspan = {};
-        wordspan.w = Math.ceil((Math.ceil(d.word.length * d.frequency * 5)) / wField); 
-        wordspan.h = Math.ceil(Math.ceil(d.frequency * 5) / hField);
+        var multiplierW = d.frequency * 5;
+        var multiplierH = d.frequency * 10;
+        wordspan.w = Math.ceil((d.word.length * multiplierW) / wField); 
+        wordspan.h = Math.ceil(multiplierH / hField);
         console.log("Wordspan is: " + wordspan.w + "," + wordspan.h);
         return wordspan;
     };
@@ -143,10 +149,10 @@ var visualizeWords = function(){
         var fieldIndex = queryField(wordspan.w, wordspan.h);
         var pos = {};
         if(fieldIndex != -1){
-            var col = fieldIndex % nCols;
-            var row = Math.floor(fieldIndex/nRows);
-            pos.x = Math.round((w/nCols) * col);
-            pos.y = h - (Math.round((h/nRows) * row));
+            var row = Math.floor(fieldIndex/nCols);
+            var col = (fieldIndex + nCols) % nCols;
+            pos.x = (wField * col);
+            pos.y = (hField * row) + 40;
             return pos;
         }
         else{
@@ -175,7 +181,9 @@ var visualizeWords = function(){
         })
         .attr("font-family", "Comic Sans MS")
         .attr("font-size", function(d){
-            return d.frequency * 10;
+            //return d.frequency * 10;
+            return fontScale(d.frequency);
+            //return 30;
         })
         .attr("fill", function(d, i) { return fill(i); });
         //.attr("rotate", (Math.random() * 2) * 90);
