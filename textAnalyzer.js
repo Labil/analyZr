@@ -9,12 +9,12 @@ var getWords = function(){
         else return 1;
     };
 
-    //trim() removes whitespace from both sides of string
-    var words = document.getElementById("textfield").value.toLowerCase().trim().replace(/[,;.!]/g,'').split(/[\s\/]+/g).sort();
+    //trim() removes whitespace from both sides of string //.sort() at the end for sorting in alphabetical order
+    var words = document.getElementById("textfield").value.toLowerCase().trim().replace(/[,;.!]/g,'').replace(/\d+/g,'').split(/[\s\/]+/g);
     
     var ignore = ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
-        'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 'be', 'has', 'if'];
-   /* var ignore = ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 'to', 
+        'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 'be', 'has', 'if', 'by'];
+    /*var ignore = ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 'to', 
         'tre', 'kanskje', 'ganske', 'av', 'de', 'dro', 'fikk', 'på', 'så', 'som', 'hadde',
         'men', 'om', 'så', 'å', 'på', 'veldig', 'rundt', 'masse', 'at', 'bare', 'ble', 'det',
         'er', 'etter', 'for', 'i', 'gikk', 'ha', 'ham', 'han', 'har', 'ikke', 'kom', 'sa',
@@ -57,12 +57,13 @@ var getWords = function(){
 
 var visualizeWords = function(){
 
+    var dataset = getWords().slice();
+
     var w = 800;
     var h = 600;
     var frameW = 600;
     var frameH = 500;
   
-    var dataset = getWords().slice();
     console.log("Dataset length: " + dataset.length);
     var svg = d3.select("body").append("svg");
     svg.attr("width", w)
@@ -76,23 +77,27 @@ var visualizeWords = function(){
 
     var fontScale = d3.scale.linear()
         .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-        .range([10, 80]);
+        .range([20, 80]);
 
     var wSpanScale = d3.scale.linear()
         .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-        .range([10, 45]);
+        .range([12, 45]);
 
     var hSpanScale = d3.scale.linear()
         .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-        .range([20, 70]);
+        .range([40, 60]);
+
+    var topMarginSpanScale = d3.scale.linear()
+        .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
+        .range([5, 30]);
 
 
     var nCols, nRows, wField, hField;
     var fields = [];
 
     var setupFields = function(){
-        nCols = dataset.length;
-        nRows = dataset.length;
+        nCols = dataset.length/3;
+        nRows = dataset.length/3;
         wField = Math.round(frameW / nCols);
         hField = Math.round(frameH / nRows);
         console.log("width per field: " + wField + ", height per field: " + hField);
@@ -131,7 +136,7 @@ var visualizeWords = function(){
                 }
             }     
         }
-        console.log("Word fit here!");
+        //console.log("Word fit here!");
         return true;
     };
 
@@ -159,6 +164,7 @@ var visualizeWords = function(){
         return wordspan;
     };
     //Pos in pixels
+    var margin = 40;
     var getPosition = function(d){
         var wordspan = calcWordSpan(d);
         var fieldIndex = queryField(wordspan.w, wordspan.h);
@@ -166,8 +172,10 @@ var visualizeWords = function(){
         if(fieldIndex != -1){
             var row = Math.floor(fieldIndex/nCols);
             var col = (fieldIndex + nCols) % nCols;
-            pos.x = (wField * col);
-            pos.y = 50 + (hField * row) + hSpanScale(d.frequency) ;
+            pos.x = margin + (wField * col);
+            //pos.y = margin + (hField * row) + topMarginSpanScale(d.frequency) ;
+            pos.y = margin + (hField * row) + topMarginSpanScale(d.frequency) ;
+
             return pos;
         }
         else{
