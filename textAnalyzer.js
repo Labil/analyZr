@@ -97,16 +97,33 @@ var visualizeWords = function(){
 
     var nCols, nRows, wField, hField;
     var fields = [];
+    var startField, startRow;
+    var rowOrder = [];
 
     var setupFields = function(){
-        nCols = dataset.length/3;
-        nRows = dataset.length/3;
+        nCols = Math.round(dataset.length/3);
+        nRows = Math.round(dataset.length/3);
+        console.log("nCols: " + nCols + ", nRows: " + nRows);
         wField = Math.round(frameW / nCols);
         hField = Math.round(frameH / nRows);
         console.log("width per field: " + wField + ", height per field: " + hField);
 
-        for(var i = 0; i < wField * hField; i++){
+        for(var i = 0; i < nCols * nRows; i++){
             fields.push(true);
+        }
+
+        startField = (fields.length/2) + (nCols/2);
+        console.log("Start field: " + startField);
+        startRow = Math.floor(startField/nCols);
+        rowOrder.push(startRow);
+        console.log("Startrow: " + startRow);
+
+        for(var i = 1; i < nRows/2; i++){
+            rowOrder.push(startRow - i);
+            rowOrder.push(startRow + i);
+            var lul = startRow -i;
+            var lal = startRow + i;
+            console.log("Roworder: " + lul + "," + lal);
         }
     }();
 
