@@ -14,6 +14,8 @@ var getWords = function(){
     
     var ignore = ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
         'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 'be', 'has', 'if', 'by'];
+
+    //Norwegian ignores:
     /*var ignore = ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 'to', 
         'tre', 'kanskje', 'ganske', 'av', 'de', 'dro', 'fikk', 'på', 'så', 'som', 'hadde',
         'men', 'om', 'så', 'å', 'på', 'veldig', 'rundt', 'masse', 'at', 'bare', 'ble', 'det',
@@ -29,15 +31,16 @@ var getWords = function(){
 
     var wordsCount = filtered.length;
 
-    var individualWords = [];
-
     var frequency = {};
-
     for(var i = 0; i < wordsCount; i++){
         var w = filtered[i];
         frequency[w] = frequency[w] || 0; //If current word haven't been counted yet
         frequency[w]++;    
     }
+
+    /*var sortWordsByFrequency = function(w){
+                
+    };*/
 
     var minRepeat = scaleMinRepeat(wordsCount);
     //minRepeat = 3;
@@ -107,11 +110,10 @@ var visualizeWords = function(){
         }
     }();
 
-    //Looks for space in the csv to put the word
+    //Looks for space in the svg to put the word, returns fieldIndex
     var queryField = function(wSpan, hSpan){
 
-        //To avoid dividing by 0 further down, plus adding border i = 1
-        for(var i = 1; i < fields.length; i++){
+        for(var i = 0; i < fields.length; i++){
             if(fields[i] == true){
                 if(checkSubsequentFields(i, wSpan, hSpan)){
                     reserveFields(i, wSpan, hSpan);
@@ -121,30 +123,28 @@ var visualizeWords = function(){
         }
         console.log("No space for the word was found");
         return -1;
-    
     };
 
+    //Checks if there is enough space for the whole word to fit
     var checkSubsequentFields = function(index, wSpan, hSpan){
         for(var i = 0; i < wSpan; i++){
             if(fields[index + i] == false){
                 return false;
             }
             for(var j = 1; j < hSpan; j++){
-                var lul = index + i + (nRows * j);
-                if(fields[lul] == false){
+                var indx = index + i + (nRows * j);
+                if(fields[indx] == false){
                     return false;
                 }
             }     
         }
-        //console.log("Word fit here!");
         return true;
     };
 
+    //Makes the selected fields false, so no other words will fit here.
     var reserveFields = function(index, wSpan, hSpan){
-        console.log("Reserving field from index: " + index + " and wSpan: " + wSpan + ", hSpan: " + hSpan);
         for(var i = 0; i < wSpan; i++){
-            var lu = index + i;
-            fields[lu] = false;
+            fields[index + i] = false;
             for(var j = 1; j < hSpan; j++){
                 var lul = index + i + (nRows * j);
                 fields[lul] = false;
@@ -173,16 +173,17 @@ var visualizeWords = function(){
             var row = Math.floor(fieldIndex/nCols);
             var col = (fieldIndex + nCols) % nCols;
             pos.x = margin + (wField * col);
-            //pos.y = margin + (hField * row) + topMarginSpanScale(d.frequency) ;
             pos.y = margin + (hField * row) + topMarginSpanScale(d.frequency) ;
 
             return pos;
         }
         else{
-            return { "x" : 0, "y" : 0};
+            //Positions the words that don't fit outside svg.. hack for the moment
+            return { "x" : -100, "y" : -100};
         }
     };
 
+    //Saves the y-positions of the words
     var savedYPositions = [];
 
     svg.selectAll("text")
@@ -207,11 +208,27 @@ var visualizeWords = function(){
             //return 30;
         })
         .attr("fill", function(d, i) { return fill(i); });
-        //.attr("rotate", (Math.random() * 2) * 90);
 };
 
-var getRandomNumber = function(min, max){
-    var rand = Math.floor(Math.random() * (max - min + 1) + min);
-    return rand;
-};
-
+//BAD IDEA
+/*var placedWords = [];
+var tempWords = [];
+var placeWord = function(word, parentSpan, parentSide, fieldIndex){
+    word.fieldIndex = fieldIndex;
+    placedWords.push(word);
+    if(tempWords >= 3){
+        //Skip spawing words on right side if the parent was to the right
+        if(parentSide == "right"){
+            for(var i = 0; i < 3; i++){
+                //spawn word on the left
+                if(i == 0){
+                    var newWord = tempWords[tempWords.length-1];
+                    var newSpan = calcWordSpan(newWord).w;
+                    placeWord(newWord, newSpan, "right", fieldIndex - newSpan)    
+                }
+                    
+            }
+            
+        }
+    }
+};*/
