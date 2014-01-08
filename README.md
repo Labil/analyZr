@@ -1,7 +1,7 @@
-analyZr
+**analyZr**
 =======
 
-A word frequency visualizer in javaScript &amp; d3
+A word frequency visualizer in __javaScript__ &amp; **d3**
 
 
 Work in progress.
