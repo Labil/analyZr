@@ -123,7 +123,7 @@ var visualizeWords = function(){
             else fields.push(true);
         }
 
-        startField = (Math.floor(fields.length/2) - nCols*2) + 3;
+        startField = Math.floor(fields.length/2);
         startRow = Math.floor(startField/nCols);
         rowOrder.push(startRow);
 
@@ -151,6 +151,7 @@ var visualizeWords = function(){
         }
 
         for(var q = 0; q < rowOrder.length; q++){
+            console.log("Row: " + rowOrder[q]);
             var rowStartNum = (rowOrder[q] * nCols) - nCols;
             var rowEndNum = rowOrder[q] * nCols;
 
