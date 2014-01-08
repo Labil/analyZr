@@ -1,3 +1,10 @@
+//TODO: 
+// Save image as png
+// Refactor
+// Limit number of words?
+// Make keyword-list configurable
+//Sort words by frequency, so that the most frequent ones end up in the middle?
+
 var getWords = function(){
 
     var scaleMinRepeat = function(dataset){
@@ -12,15 +19,15 @@ var getWords = function(){
     //trim() removes whitespace from both sides of string //.sort() at the end for sorting in alphabetical order
     var words = document.getElementById("textfield").value.toLowerCase().trim().replace(/[,;.!]/g,'').replace(/\d+/g,'').split(/[\s\/]+/g);
     
-    var ignore = ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
-        'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 'be', 'has', 'if', 'by'];
+    /*var ignore = ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
+        'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 'be', 'has', 'if', 'by'];*/
 
     //Norwegian ignores:
-    /*var ignore = ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 'to', 
+    var ignore = ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 'to', 
         'tre', 'kanskje', 'ganske', 'av', 'de', 'dro', 'fikk', 'på', 'så', 'som', 'hadde',
         'men', 'om', 'så', 'å', 'på', 'veldig', 'rundt', 'masse', 'at', 'bare', 'ble', 'det',
         'er', 'etter', 'for', 'i', 'gikk', 'ha', 'ham', 'han', 'har', 'ikke', 'kom', 'sa',
-        'seg', 'meg', 'skulle', 'ville', '-', 'måtte', 'andre'];*/
+        'seg', 'meg', 'skulle', 'ville', '-', 'måtte', 'andre'];
 
     var filtered = words.filter(function(val){
         for(var i = 0; i < ignore.length; i++){
@@ -84,15 +91,15 @@ var visualizeWords = function(){
 
     var wSpanScale = d3.scale.linear()
         .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-        .range([12, 45]);
+        .range([12, 40]);
 
     var hSpanScale = d3.scale.linear()
         .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-        .range([40, 60]);
+        .range([23, 75]);
 
     var topMarginSpanScale = d3.scale.linear()
         .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-        .range([5, 30]);
+        .range([1, 50]);
 
 
     var nCols, nRows, wField, hField;
@@ -101,40 +108,58 @@ var visualizeWords = function(){
     var rowOrder = [];
 
     var setupFields = function(){
-        nCols = Math.round(dataset.length/3);
-        nRows = Math.round(dataset.length/3);
+        nCols = Math.round(dataset.length/2);
+        nRows = Math.round(dataset.length/2);
         console.log("nCols: " + nCols + ", nRows: " + nRows);
         wField = Math.round(frameW / nCols);
         hField = Math.round(frameH / nRows);
         console.log("width per field: " + wField + ", height per field: " + hField);
 
         for(var i = 0; i < nCols * nRows; i++){
-            fields.push(true);
+            //if(i < nCols) fields.push(false); //first row false
+            //else if(i % nCols == 0) fields.push(false); //First col false
+            if(i % nCols == nCols - 1) fields.push(false); //last col false to keep words from exiting svg width
+
+            else fields.push(true);
         }
 
-        startField = (fields.length/2) + (nCols/2);
-        console.log("Start field: " + startField);
+        startField = (Math.floor(fields.length/2) - nCols*2) + 3;
         startRow = Math.floor(startField/nCols);
         rowOrder.push(startRow);
-        console.log("Startrow: " + startRow);
 
         for(var i = 1; i < nRows/2; i++){
-            rowOrder.push(startRow - i);
             rowOrder.push(startRow + i);
-            var lul = startRow -i;
-            var lal = startRow + i;
-            console.log("Roworder: " + lul + "," + lal);
+            rowOrder.push(startRow - i);
         }
     }();
+
+    var firstTime = true;
 
     //Looks for space in the svg to put the word, returns fieldIndex
     var queryField = function(wSpan, hSpan){
 
-        for(var i = 0; i < fields.length; i++){
-            if(fields[i] == true){
-                if(checkSubsequentFields(i, wSpan, hSpan)){
-                    reserveFields(i, wSpan, hSpan);
-                    return i;
+        //Want the first word to be placed in the middle, the others subsequently placed around
+        if(firstTime){
+            if(fields[startField] == true){
+                if(checkSubsequentFields(startField, wSpan, hSpan)){
+                    reserveFields(startField, wSpan, hSpan);
+                    //console.log("derp");
+                    firstTime = false;
+                    return startField;
+                }
+            }
+        }
+
+        for(var q = 0; q < rowOrder.length; q++){
+            var rowStartNum = (rowOrder[q] * nCols) - nCols;
+            var rowEndNum = rowOrder[q] * nCols;
+
+            for(var i = rowStartNum; i < rowEndNum; i++){
+                if(fields[i] == true){
+                    if(checkSubsequentFields(i, wSpan, hSpan)){
+                        reserveFields(i, wSpan, hSpan);
+                        return i;
+                    }
                 }
             }
         }
@@ -177,11 +202,11 @@ var visualizeWords = function(){
         var multiplierH = hSpanScale(d.frequency);
         wordspan.w = Math.ceil((d.word.length * multiplierW) / wField); 
         wordspan.h = Math.ceil(multiplierH / hField);
-        console.log("Wordspan is: " + wordspan.w + "," + wordspan.h);
         return wordspan;
     };
     //Pos in pixels
-    var margin = 40;
+    var marginTop = h * 0.1;
+    var marginLeft = w * 0.15;
     var getPosition = function(d){
         var wordspan = calcWordSpan(d);
         var fieldIndex = queryField(wordspan.w, wordspan.h);
@@ -189,8 +214,8 @@ var visualizeWords = function(){
         if(fieldIndex != -1){
             var row = Math.floor(fieldIndex/nCols);
             var col = (fieldIndex + nCols) % nCols;
-            pos.x = margin + (wField * col);
-            pos.y = margin + (hField * row) + topMarginSpanScale(d.frequency) ;
+            pos.x = marginLeft + (wField * col) + getRandomNumber(-5, 15);
+            pos.y = marginTop + (hField * row) + topMarginSpanScale(d.frequency) + getRandomNumber(-5,10);
 
             return pos;
         }
@@ -220,32 +245,12 @@ var visualizeWords = function(){
         })
         .attr("font-family", "Comic Sans MS")
         .attr("font-size", function(d){
-           //console.log("Frequency: " + d.frequency + ", font-size: " + fontScale(d.frequency));
             return fontScale(d.frequency);
-            //return 30;
         })
         .attr("fill", function(d, i) { return fill(i); });
 };
 
-//BAD IDEA
-/*var placedWords = [];
-var tempWords = [];
-var placeWord = function(word, parentSpan, parentSide, fieldIndex){
-    word.fieldIndex = fieldIndex;
-    placedWords.push(word);
-    if(tempWords >= 3){
-        //Skip spawing words on right side if the parent was to the right
-        if(parentSide == "right"){
-            for(var i = 0; i < 3; i++){
-                //spawn word on the left
-                if(i == 0){
-                    var newWord = tempWords[tempWords.length-1];
-                    var newSpan = calcWordSpan(newWord).w;
-                    placeWord(newWord, newSpan, "right", fieldIndex - newSpan)    
-                }
-                    
-            }
-            
-        }
-    }
-};*/
+var getRandomNumber = function(min, max){
+    var rand = Math.floor(Math.random() * (max - min + 1) + min);
+    return rand;
+};
