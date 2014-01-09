@@ -45,10 +45,17 @@ var getWords = function(){
         frequency[w] = frequency[w] || 0; //If current word haven't been counted yet
         frequency[w]++;    
     }
+    var sortWordsByFrequency = function(w){
+        var sorted = {};
+        /*var lastFreq;
+        for(var key in frequency ){
+            if(!lastFreq){
+                lastKey = ;
+            }
+            if(frequency[key])
 
-    /*var sortWordsByFrequency = function(w){
-                
-    };*/
+        } */       
+    };
 
     var minRepeat = scaleMinRepeat(wordsCount);
     minRepeat = 3;
@@ -144,7 +151,6 @@ var visualizeWords = function(){
             if(fields[startField] == true){
                 if(checkSubsequentFields(startField, wSpan, hSpan)){
                     reserveFields(startField, wSpan, hSpan);
-                    //console.log("derp");
                     firstTime = false;
                     return startField;
                 }
@@ -164,7 +170,7 @@ var visualizeWords = function(){
                 }
             }
         }
-        console.log("No space for the word was found");
+        //console.log("No space for the word was found");
         return -1;
     };
 
