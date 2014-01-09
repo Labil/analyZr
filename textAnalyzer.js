@@ -19,15 +19,16 @@ var getWords = function(){
     //trim() removes whitespace from both sides of string //.sort() at the end for sorting in alphabetical order
     var words = document.getElementById("textfield").value.toLowerCase().trim().replace(/[,;.!]/g,'').replace(/\d+/g,'').split(/[\s\/]+/g);
     
-    /*var ignore = ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
-        'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 'be', 'has', 'if', 'by'];*/
+    var ignore = ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
+        'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 'be', 'has', 'if', 'by',
+        'poeng', 'dager', 'siden', 'permalenkerapportergive', 'goldsvar'];
 
     //Norwegian ignores:
-    var ignore = ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 'to', 
+    /*var ignore = ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 'to', 
         'tre', 'kanskje', 'ganske', 'av', 'de', 'dro', 'fikk', 'på', 'så', 'som', 'hadde',
         'men', 'om', 'så', 'å', 'på', 'veldig', 'rundt', 'masse', 'at', 'bare', 'ble', 'det',
         'er', 'etter', 'for', 'i', 'gikk', 'ha', 'ham', 'han', 'har', 'ikke', 'kom', 'sa',
-        'seg', 'meg', 'skulle', 'ville', '-', 'måtte', 'andre'];
+        'seg', 'meg', 'skulle', 'ville', '-', 'måtte', 'andre'];*/
 
     var filtered = words.filter(function(val){
         for(var i = 0; i < ignore.length; i++){
@@ -50,7 +51,7 @@ var getWords = function(){
     };*/
 
     var minRepeat = scaleMinRepeat(wordsCount);
-    //minRepeat = 3;
+    minRepeat = 3;
 
     var jsonFreq = [];
     for(var key in frequency){
@@ -151,7 +152,6 @@ var visualizeWords = function(){
         }
 
         for(var q = 0; q < rowOrder.length; q++){
-            console.log("Row: " + rowOrder[q]);
             var rowStartNum = (rowOrder[q] * nCols) - nCols;
             var rowEndNum = rowOrder[q] * nCols;
 
