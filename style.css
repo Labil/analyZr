@@ -1,0 +1,145 @@
+/* contains everything, centered*/
+#main{
+	margin: 0 auto;
+	position: relative;
+	min-width: 800px;
+	max-width: 80%;
+	font-family: sans-serif;
+}
+
+/*description of project */
+#header{
+	position: relative;
+	margin: 0 auto;
+	min-width: 400px;
+	max-width: 60%;
+	color:gray;
+	padding: 15px 30px 10px 30px;
+	margin-bottom: 30px;
+}
+
+/* contains both #input & #image */
+#content{
+	position: relative;
+	margin: 0 auto;
+}
+
+/* contains inputfield & button */
+#input{
+	padding-top:20px;
+	padding-right: 0;
+	float: left;
+}
+
+/* contains image svg & save button */
+#output{
+	padding: 20px;
+	display: none;
+	float: left;
+}
+
+#textfield{
+	padding: 5px;
+}
+
+/* contains dictionary, exceptions & limit , left side */
+#config{
+	min-width: 200px;
+	max-width: 300px;
+	float: left;
+	padding: 5px 20px 30px 20px;
+
+}
+#dictionary{
+
+}
+
+#exception{
+
+}
+
+#ignore{
+	float:left;
+}
+#ignoreBtn{
+	float: left;
+}
+
+#limit{
+
+}
+
+/* info arrow display on right side */
+#info{
+	float: left;
+	max-width: 200px;
+	padding: 300px 0px 20px 20px;
+	font-family: monospace;
+	font-size: 0.9em;
+	color: gray;
+
+}
+
+p.description{
+	text-align: justify;
+	font-size: 0.9em;
+	color: gray;
+	margin: 0;
+	margin-top: 8px;
+}
+p.title{
+	text-align: left;
+	float: left;
+	font-size: 2.5em;
+	color: black;
+	margin: 0;
+	margin-right: 15px;
+}
+
+/* The main button style */
+.btn {
+	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+	background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+	background-color:#79bbff;
+	-webkit-border-top-left-radius:15px;
+	-moz-border-radius-topleft:15px;
+	border-top-left-radius:15px;
+	-webkit-border-top-right-radius:15px;
+	-moz-border-radius-topright:15px;
+	border-top-right-radius:15px;
+	-webkit-border-bottom-right-radius:15px;
+	-moz-border-radius-bottomright:15px;
+	border-bottom-right-radius:15px;
+	-webkit-border-bottom-left-radius:15px;
+	-moz-border-radius-bottomleft:15px;
+	border-bottom-left-radius:15px;
+	text-indent:0;
+	border:1px solid #84bbf3;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Courier New;
+	font-size:16px;
+	font-weight:bold;
+	font-style:normal;
+	height:36px;
+	line-height:36px;
+	width:112px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #528ecc;
+	margin-left: 78%;
+}
+.btn:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
+	background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+	background-color:#378de5;
+}.btn:active {
+	position:relative;
+	top:1px;
+}
+/* This button was generated using CSSButtonGenerator.com */

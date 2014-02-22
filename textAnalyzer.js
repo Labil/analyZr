@@ -2,18 +2,34 @@
 // Save image as png
 // Refactor
 // Limit number of words?
+// Make fontsize dependent on how many words
 // Make keyword-list configurable
-//Sort words by frequency, so that the most frequent ones end up in the middle?
+// Sort words by frequency, so that the most frequent ones end up in the middle?
+
 
 var getWords = function(){
 
-    var scaleMinRepeat = function(dataset){
-        if(dataset > 1000) return 8;
-        if(dataset > 800) return 6;
-        if(dataset > 600) return 4;
-        if(dataset > 400) return 2;
-        if(dataset > 200) return 1;
-        else return 1;
+    var scaleMinRepeat = function(amount){
+        var num;
+        switch(true){
+            case (amount > 1000):
+                num = 6;
+                break;
+            case (amount > 800):
+                num = 5;
+                break;
+            case (amount > 600):
+                num = 4;
+                break;
+            case (amount > 400):
+                num = 3;
+                break;
+            default:
+                num = 2;
+                break;
+        }
+        console.log("Number of words: " + amount);
+        return num;
     };
 
     //trim() removes whitespace from both sides of string //.sort() at the end for sorting in alphabetical order
@@ -58,7 +74,7 @@ var getWords = function(){
     };
 
     var minRepeat = scaleMinRepeat(wordsCount);
-    minRepeat = 3;
+    //minRepeat = 3;
 
     var jsonFreq = [];
     for(var key in frequency){

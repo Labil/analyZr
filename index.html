@@ -1,15 +1,59 @@
 <!doctype html>
 <html>
 <head>
-<title>Text AnalyZer</title>
+<title>CloudilyZer</title>
 	<!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
+	<link rel="stylesheet" type="text/css" href="style.css">
 	<script type="text/javascript" src="d3/d3.v3.min.js" charset="utf-8"></script>
 </head>
 <body>
 
-<textarea id="textfield" rows="30" cols="100">Paste in the text!</textarea>
+	<div id="main">
+		<div id="header">
+			<p class="title">Cloudilyzer</p>
+			<p class="description">is a configurable client-side word frequency analyzer that generates a colorful wordcloud, based on the submitted text. Made for fun while learning javascript and D3.js while at Hacker School.</p>
+		</div>
+		
+
+		<div id="content">
+			<div id="config">
+				<h2>Preferences</h2>
+				<div id="dictionary">
+					<p><b>Choose dictionary:</b></p>
+					<input type="checkbox" />Norwegian
+					<input type="checkbox" />English
+				</div>
+				<br />
+				<div id="exception">
+					<p><b>Add words to ignore list:</b></p>
+					<input id="ignore" value="" placeholder="" />
+					<button id="ignoreBtn">Add</button>
+				</div>
+				<br />
+				<br />
+				<div id="limit">
+					<p><b>Limit number of words:</b></p>
+					<input type="number" name="Limit" min="1" max="100" value="30" />
+				</div>
+			</div>
+			<div id="input">
+				<textarea id="textfield" rows="25" cols="60" value="" placeholder="Paste in the text you wanna analyze!"></textarea>
+				<br />
+				<button class="btn">Cloudify!</button>
+			</div>
+			<div id="output">
+				<button class="btn">Save image</button>
+			</div>
+			<div id="info">
+				<h3>Note</h3>
+				<p>This application runs only in the browser and your text will not be saved anywhere!</p>
+			</div>
+		</div>
+	</div>
+
+<!--<textarea id="textfield" rows="30" cols="100">Paste in the text!</textarea>
 <button onclick="visualizeWords();" value="Analyze">Analyze</button>
-<script type="text/javascript" src="textAnalyzer.js" charset="utf-8"></script>
+<script type="text/javascript" src="textAnalyzer.js" charset="utf-8"></script>-->
 
 
 </body>
