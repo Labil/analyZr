@@ -69,11 +69,32 @@
 
 }
 
+#footer{
+    position: absolute;
+    font-family: "ClearLine";
+    font-size: 2.5em; 
+    margin-top:70px;
+    margin-left: 80px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+
+}
+
+@font-face {
+  font-family: "ClearLine";
+  src: url("ClearLine.ttf");
+}
+
 /* info arrow display on right side */
 #info{
 	float: left;
+	display: inline;
 	max-width: 200px;
-	padding: 300px 0px 20px 20px;
+	padding: 10px 0px 20px 20px;
+	margin-top:300px;
 	font-family: monospace;
 	font-size: 0.9em;
 	color: gray;
