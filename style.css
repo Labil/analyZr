@@ -15,7 +15,7 @@
 	max-width: 60%;
 	color:gray;
 	padding: 15px 30px 10px 30px;
-	margin-bottom: 30px;
+	margin-bottom: 10px;
 }
 
 /* contains both #input & #image */
@@ -85,7 +85,7 @@ p.description{
 	font-size: 0.9em;
 	color: gray;
 	margin: 0;
-	margin-top: 8px;
+	margin-top: 10px;
 }
 p.title{
 	text-align: left;
@@ -97,6 +97,7 @@ p.title{
 }
 
 /* The main button style */
+/* This button was generated using CSSButtonGenerator.com */
 .btn {
 	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
@@ -142,4 +143,30 @@ p.title{
 	position:relative;
 	top:1px;
 }
-/* This button was generated using CSSButtonGenerator.com */
+
+/* Fancy line from 
+http://stackoverflow.com/questions/15215556/create-a-beautiful-horizontal-line-with-css-only */
+hr.fancy-line { 
+    border: 0; 
+    height: 5px;
+
+}
+hr.fancy-line:before {
+    top: -0.5em;
+    height: 1em;
+}
+hr.fancy-line:after {
+    content:'';
+    height: 0.5em;
+    top: 1px;
+}
+
+hr.fancy-line:before, hr.fancy-line:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+}
+
+hr.fancy-line, hr.fancy-line:before {
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 75%);
+}
