@@ -33,7 +33,7 @@
 
 /* contains image svg & save button */
 #output{
-	padding: 20px;
+	padding-top: 20px;
 	display: none;
 	float: left;
 }
@@ -91,7 +91,6 @@ a{
 /* info arrow display on right side */
 #info{
 	float: left;
-	display: inline;
 	max-width: 200px;
 	padding: 10px 0px 20px 20px;
 	margin-top:300px;

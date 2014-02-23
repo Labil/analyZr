@@ -40,13 +40,24 @@ Analyzer.prototype.initIgnore = function(language){
 };
 
 Analyzer.prototype.filterIgnore = function(){
-	var filtered = this.words.filter(function(val){
+	var filtered = [];
+	for(var i = 0; i < this.words.length; i++){
+		var found = false;
+		for(var j = 0; j < this.ignore.length; j++){
+			if(this.ignore[j] == this.words[i]){
+				found = true;
+			}
+		}
+		if(!found)
+			filtered.push(this.words[i]);	
+	}
+	
+	/*var filtered = this.words.filter(function(val){
 		for(var i = 0; i < this.ignore.length; i++){
 			if(this.ignore[i] == val) return false;
 		}
 		return true;
-	});
-
+	});*/
 	return filtered.slice(0);
 };
 
@@ -60,10 +71,11 @@ Analyzer.prototype.getFrequency = function(){
 
 //0.005 gives a fairy nice balance, but maybe do some more tests
 Analyzer.prototype.scaleMinFrequency = function(numWords){
-	//maybe add 1
 	console.log("Number of words is: " + numWords);
-	console.log("Minimum frequency is then: " + Math.round(numWords * 0.005));
-	return Math.round(numWords * 0.005)+1;
+
+	var	num = Math.round(numWords * 0.001) + 1;
+	console.log("Min freq: " + num);
+	return num;
 };
 
 Analyzer.prototype.sortWordsByFrequency = function(){
@@ -96,5 +108,5 @@ var Dictionary = {
 	english : ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
 		         'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 
 		         'be', 'has', 'if', 'by', 'poeng', 'dager', 'siden', 
-		         'permalenkerapportergive', 'goldsvar']
+		         'permalenkerapportergive', 'goldsvar', '::', ':', '-', ',', '.']
 };
