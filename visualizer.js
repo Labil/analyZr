@@ -6,7 +6,7 @@ var Visualizer = function(data, elemID, w, h){
 	var frameW = w - w/3.5;
 	var frameH = h - h/5;
 
-	var svg = d3.select('#' + elemID).append("svg");
+	var svg = d3.select('#' + elemID).insert("svg", ".btn");
 
 	svg.attr("width", w)
 	    .attr("height", h);

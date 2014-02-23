@@ -3,11 +3,11 @@ $(document).ready(function() {
 	var visualizer;
 
 	var btn = $(".btn").on('click', function(e){
-		console.log("Button clicked");
 		var data = analyzer.analyze("textfield", "english");
+
 		var inputElem = $('#input');
 		var w = inputElem.innerWidth();
-		var h = inputElem.innerHeight();
+		var h = inputElem.innerHeight() - 40; //to account for padding. Should be changed
 		console.log("elem w: " + w + " , elem h: " + h);
 		$('#input').css("display", "none");
 
