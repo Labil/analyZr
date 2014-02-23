@@ -17,34 +17,49 @@ var Visualizer = function(data, elemID, w, h){
 
 	var fill = d3.scale.category20();
 
+	var minFreq = d3.min(dataset, function(d) { return d.frequency; });
+	var maxFreq = d3.max(dataset, function(d) { return d.frequency; });
+	var fontRangeMin = Math.ceil(minFreq * (maxFreq/minFreq));
+	var fontRangeMax = Math.ceil(maxFreq * minFreq * minFreq * minFreq);
+	if(fontRangeMax > 100) fontRangeMax = 100;
+	if(fontRangeMin > 20) fontRangeMin = 20;
+	if(fontRangeMin < 10) fontRangeMin = 10;
+	console.log("frangemin: " + fontRangeMin + " , fontRangeMax:" + fontRangeMax);
+
+
 	var fontScale = d3.scale.linear()
 	    .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-	    .range([5, 80]);
+	    .range([fontRangeMin, fontRangeMax]);
 
 	var wSpanScale = d3.scale.linear()
 	    .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-	    .range([5, 20]);
+	    .range([15, 30]);
 
 	var hSpanScale = d3.scale.linear()
 	    .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-	    .range([10, 35]);
+	    .range([15, 110]);
 
 	var topMarginSpanScale = d3.scale.linear()
 	    .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-	    .range([1, 20]);
+	    .range([6, 60]);
 
 
 	var nCols, nRows, wField, hField;
 	var fields = [];
 	var startField, startRow;
 	var rowOrder = [];
+	var outOfSpace = false;
 
 	var setupFields = function(){
-	    nCols = Math.round(dataset.length/2);
-	    nRows = Math.round(dataset.length/2);
+	    //nCols = Math.round(dataset.length*4);
+	    nCols = Math.round(frameW/fontRangeMin);
+	    //nRows = Math.round(dataset.length*4);
+	    nRows = Math.round(frameH/fontRangeMin);
 	    console.log("nCols: " + nCols + ", nRows: " + nRows);
-	    wField = Math.round(frameW / nCols);
-	    hField = Math.round(frameH / nRows);
+	    //wField = Math.round(frameW / nCols);
+	    //hField = Math.round(frameH / nRows);
+	    wField = fontRangeMin;
+	    hField = fontRangeMin;
 	    console.log("width per field: " + wField + ", height per field: " + hField);
 
 	    for(var i = 0; i < nCols * nRows; i++){
@@ -128,11 +143,19 @@ var Visualizer = function(data, elemID, w, h){
 	//In field units
 	var calcWordSpan = function(d){
 	    var wordspan = {};
-	    console.log("d.Frequency: " + d.frequency);
-	    var multiplierW = wSpanScale(d.frequency);
-	    var multiplierH = hSpanScale(d.frequency);
-	    wordspan.w = Math.ceil((d.word.length * multiplierW) / wField); 
-	    wordspan.h = Math.ceil(multiplierH / hField);
+	    //console.log("d.Frequency: " + d.frequency);
+	//    var letterW = (fontScale(d.frequency) / Math.sqrt((fontRangeMax-fontRangeMin)/fontRangeMin));
+		var letterW = (fontScale(d.frequency) / (maxFreq - minFreq)) + (d.frequency - minFreq);// * Math.log(d.frequency));
+	    var wordW = letterW * (d.word.length *2) + (maxFreq- d.frequency);
+	    var wordH = letterW + Math.sqrt(fontScale(d.frequency));
+	    // var multiplierW = wSpanScale(d.frequency);
+	    // var multiplierH = hSpanScale(d.frequency);
+	    
+	    // wordspan.w = Math.ceil((d.word.length * multiplierW) / wField); 
+	    // wordspan.h = Math.ceil(multiplierH / hField);
+	    wordspan.w = Math.ceil(wordW / wField);
+	    wordspan.h = Math.ceil(wordH / hField);
+	    console.log("Wordspan: " + wordspan.w + "," + wordspan.h);
 	    return wordspan;
 	};
 	//Pos in pixels
@@ -145,9 +168,10 @@ var Visualizer = function(data, elemID, w, h){
 	    if(fieldIndex != -1){
 	        var row = Math.floor(fieldIndex/nCols);
 	        var col = (fieldIndex + nCols) % nCols;
-	        pos.x = marginLeft + (wField * col) + getRandomNumber(-5, 15);
-	        pos.y = marginTop + (hField * row) + topMarginSpanScale(d.frequency) + getRandomNumber(-5,10);
-
+	        // pos.x = marginLeft + (wField * col) + getRandomNumber(-5, 15);
+	        // pos.y = marginTop + (hField * row) + topMarginSpanScale(d.frequency) + getRandomNumber(-5,10);
+	        pos.x = marginLeft + (wField * col);
+	        pos.y = marginTop + (hField * row);
 	        return pos;
 	    }
 	    else{

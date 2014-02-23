@@ -18,6 +18,7 @@ Analyzer.prototype.analyze = function(elemID, language){
 	this.makeJSON(); //Makes jsonResult
 
 	console.log(this.jsonResult);
+	this.jsonResult = this.sortWordsByFrequency(this.jsonResult);
 	return this.jsonResult;
 
 }
@@ -78,8 +79,20 @@ Analyzer.prototype.scaleMinFrequency = function(numWords){
 	return num;
 };
 
-Analyzer.prototype.sortWordsByFrequency = function(){
-	//TODO
+Analyzer.prototype.sortWordsByFrequency = function(arr){
+
+	var sortByFrequency = function(a, b){
+		var aFreq = a.frequency;
+		var bFreq = b.frequency;
+		return ((bFreq < aFreq) ? -1 : ((bFreq > aFreq) ? 1 : 0));
+	};
+
+	arr.sort(sortByFrequency);
+	/*arr = arr.sort(function(a,b){
+		return a.frequency.localeCompare(b.frequency);
+	});*/
+	console.log(arr);
+	return arr;
 };
 
 Analyzer.prototype.makeJSON = function(){
