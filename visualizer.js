@@ -2,10 +2,7 @@ var Visualizer = function(data, elemID, w, h){
 	//copies data array.
 	var dataset = data.slice(0);
 	console.log("Dataset length: " + dataset.length);
-	
-	var frameW = w - w/3.5;
-	var frameH = h - h/5;
-
+	//Inserts the svg before the already existing button
 	var svg = d3.select('#' + elemID).insert("svg", ".btn");
 
 	svg.attr("width", w)
@@ -21,9 +18,7 @@ var Visualizer = function(data, elemID, w, h){
 	var maxFreq = d3.max(dataset, function(d) { return d.frequency; });
 	var fontRangeMin = Math.ceil(minFreq * (maxFreq/minFreq));
 	var fontRangeMax = Math.ceil(maxFreq * minFreq * minFreq * minFreq);
-	if(fontRangeMax > 100) fontRangeMax = 100;
-	if(fontRangeMin > 20) fontRangeMin = 20;
-	if(fontRangeMin < 10) fontRangeMin = 10;
+	//if(fontRangeMin <= 20) fontRangeMin = 20;
 	console.log("frangemin: " + fontRangeMin + " , fontRangeMax:" + fontRangeMax);
 
 
@@ -31,181 +26,76 @@ var Visualizer = function(data, elemID, w, h){
 	    .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
 	    .range([fontRangeMin, fontRangeMax]);
 
-	var wSpanScale = d3.scale.linear()
-	    .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-	    .range([15, 30]);
-
-	var hSpanScale = d3.scale.linear()
-	    .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-	    .range([15, 110]);
-
-	var topMarginSpanScale = d3.scale.linear()
-	    .domain([1, d3.max(dataset, function(d) { return d.frequency; })])
-	    .range([6, 60]);
-
-
-	var nCols, nRows, wField, hField;
-	var fields = [];
-	var startField, startRow;
-	var rowOrder = [];
-	var outOfSpace = false;
-
-	var setupFields = function(){
-	    //nCols = Math.round(dataset.length*4);
-	    nCols = Math.round(frameW/fontRangeMin);
-	    //nRows = Math.round(dataset.length*4);
-	    nRows = Math.round(frameH/fontRangeMin);
-	    console.log("nCols: " + nCols + ", nRows: " + nRows);
-	    //wField = Math.round(frameW / nCols);
-	    //hField = Math.round(frameH / nRows);
-	    wField = fontRangeMin;
-	    hField = fontRangeMin;
-	    console.log("width per field: " + wField + ", height per field: " + hField);
-
-	    for(var i = 0; i < nCols * nRows; i++){
-	        //if(i < nCols) fields.push(false); //first row false
-	        //else if(i % nCols == 0) fields.push(false); //First col false
-	        if(i % nCols == nCols - 1) fields.push(false); //last col false to keep words from exiting svg width
-
-	        else fields.push(true);
-	    }
-
-	    startField = Math.floor(fields.length/2);
-	    startRow = Math.floor(startField/nCols);
-	    rowOrder.push(startRow);
-
-	    for(var i = 1; i < nRows/2; i++){
-	        rowOrder.push(startRow + i);
-	        rowOrder.push(startRow - i);
-	    }
-	}();
-
-	var firstTime = true;
-
-	//Looks for space in the svg to put the word, returns fieldIndex
-	var queryField = function(wSpan, hSpan){
-
-	    //Want the first word to be placed in the middle, the others subsequently placed around
-	    if(firstTime){
-	        if(fields[startField] == true){
-	            if(checkSubsequentFields(startField, wSpan, hSpan)){
-	                reserveFields(startField, wSpan, hSpan);
-	                firstTime = false;
-	                return startField;
-	            }
-	        }
-	    }
-
-	    for(var q = 0; q < rowOrder.length; q++){
-	        var rowStartNum = (rowOrder[q] * nCols) - nCols;
-	        var rowEndNum = rowOrder[q] * nCols;
-
-	        for(var i = rowStartNum; i < rowEndNum; i++){
-	            if(fields[i] == true){
-	                if(checkSubsequentFields(i, wSpan, hSpan)){
-	                    reserveFields(i, wSpan, hSpan);
-	                    return i;
-	                }
-	            }
-	        }
-	    }
-	    //console.log("No space for the word was found");
-	    return -1;
+	var placedWords = [];
+	var offsetCenterX = 50;
+	var centerPos = {
+		x : w/2 - offsetCenterX,
+		y : h/2
 	};
 
-	//Checks if there is enough space for the whole word to fit
-	var checkSubsequentFields = function(index, wSpan, hSpan){
-	    for(var i = 0; i < wSpan; i++){
-	        if(fields[index + i] == false){
-	            return false;
-	        }
-	        for(var j = 1; j < hSpan; j++){
-	            var indx = index + i + (nRows * j);
-	            if(fields[indx] == false){
-	                return false;
-	            }
-	        }     
-	    }
-	    return true;
+	var checkFit = function(testBB){
+		var bb;
+		var fit = true;
+		for(var i = 0; i < placedWords.length; i++){
+
+			bb = placedWords[i].node().getBBox();
+
+			if(testBB.x <= 30 || testBB.x >= w - 120 ||
+				testBB.y <= 30 || testBB.y >= h - 60 ||
+				checkIntersection(testBB, bb)){
+				fit = false; 
+				break;
+			}
+		}
+		return fit;
 	};
 
-	//Makes the selected fields false, so no other words will fit here.
-	var reserveFields = function(index, wSpan, hSpan){
-	    for(var i = 0; i < wSpan; i++){
-	        fields[index + i] = false;
-	        for(var j = 1; j < hSpan; j++){
-	            var lul = index + i + (nRows * j);
-	            fields[lul] = false;
-	        }      
-	    } 
+	var checkIntersection = function(a, b){
+		//padding
+		var pX = 10;
+		var pY = 10;
+		return (Math.abs(a.x - b.x + pX) * 2 < (a.width + b.width - pX)) &&
+			   (Math.abs(a.y - b.y +pY) * 2 < (a.height + b.height -pY));
 	};
 
-	//In field units
-	var calcWordSpan = function(d){
-	    var wordspan = {};
-	    //console.log("d.Frequency: " + d.frequency);
-	//    var letterW = (fontScale(d.frequency) / Math.sqrt((fontRangeMax-fontRangeMin)/fontRangeMin));
-		var letterW = (fontScale(d.frequency) / (maxFreq - minFreq)) + (d.frequency - minFreq);// * Math.log(d.frequency));
-	    var wordW = letterW * (d.word.length *2) + (maxFreq- d.frequency);
-	    var wordH = letterW + Math.sqrt(fontScale(d.frequency));
-	    // var multiplierW = wSpanScale(d.frequency);
-	    // var multiplierH = hSpanScale(d.frequency);
-	    
-	    // wordspan.w = Math.ceil((d.word.length * multiplierW) / wField); 
-	    // wordspan.h = Math.ceil(multiplierH / hField);
-	    wordspan.w = Math.ceil(wordW / wField);
-	    wordspan.h = Math.ceil(wordH / hField);
-	    console.log("Wordspan: " + wordspan.w + "," + wordspan.h);
-	    return wordspan;
-	};
-	//Pos in pixels
-	var marginTop = h * 0.15;
-	var marginLeft = w * 0.15;
-	var getPosition = function(d){
-	    var wordspan = calcWordSpan(d);
-	    var fieldIndex = queryField(wordspan.w, wordspan.h);
-	    var pos = {};
-	    if(fieldIndex != -1){
-	        var row = Math.floor(fieldIndex/nCols);
-	        var col = (fieldIndex + nCols) % nCols;
-	        // pos.x = marginLeft + (wField * col) + getRandomNumber(-5, 15);
-	        // pos.y = marginTop + (hField * row) + topMarginSpanScale(d.frequency) + getRandomNumber(-5,10);
-	        pos.x = marginLeft + (wField * col);
-	        pos.y = marginTop + (hField * row);
-	        return pos;
-	    }
-	    else{
-	        //Positions the words that don't fit outside svg.. hack for the moment
-	        return { "x" : -100, "y" : -100};
-	    }
-	};
+	for(var i = 0; i < dataset.length; i++){
+		var word = dataset[i].word;
+		var freq = dataset[i].frequency;
+		var fontSize = fontScale(freq);
 
-	//Saves the y-positions of the words
-	var savedYPositions = [];
+		var text = svg.append("text")
+			.attr("x", centerPos.x)
+			.attr("y", centerPos.y)
+			.text(word)
+			.attr("font-family", "Comic Sans MS")
+			.attr("font-size", fontSize)
+			.attr("fill", fill(i));
 
-	svg.selectAll("text")
-	    .data(dataset)
-	    .enter()
-	    .append("text")
-	    .text(function(d){
-	        return d.word;
-	    })
-	    .attr("x", function(d){
-	        tempPos = getPosition(d);
-	        savedYPositions.push(tempPos.y);
-	        return tempPos.x;
-	    })
-	    .attr("y", function(d, i){
-	        return savedYPositions[i];
-	    })
-	    .attr("font-family", "Comic Sans MS")
-	    .attr("font-size", function(d){
-	        return fontScale(d.frequency);
-	    })
-	    .attr("fill", function(d, i) { return fill(i); });
+		for(var t = 0.1; t <40; t += 0.1){
+			if(checkFit(text.node().getBBox())){
+				placedWords.push(text);
+				console.log("Text fit!");
+				break;
+			}
+			else{
+				text.attr("x", Math.floor(centerPos.x + genX(t)))
+					.attr("y", Math.floor(centerPos.y + genY(t)));
+			}
+		}
+	}
+
+};
+
+var genX = function(t){
+	return 6 * t * Math.cos(t);
+};
+
+var genY = function(t){
+	return 4 * t * Math.sin(t);
 };
 
 var getRandomNumber = function(min, max){
     var rand = Math.floor(Math.random() * (max - min + 1) + min);
+    //console.log("random: " + rand);
     return rand;
 };
