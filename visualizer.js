@@ -21,10 +21,11 @@ var Visualizer = function(data, elemID, w, h){
 	else if(fontRangeMin >= 17) fontRangeMin = 17;
 	if(fontRangeMax >= 40) fontRangeMax = 40;
 	else if(fontRangeMax <= 30) fontRangeMax = 30;
-	if(dataset.length < 20){
-		fontRangeMin = 20;
-		fontRangeMax = 60;
-	}
+	/*if(minFreq < 3 && maxFreq < 10){
+		fontRangeMin = 15;
+		fontRangeMax = 50;
+	}*/
+
 	console.log("frangemin: " + fontRangeMin + " , fontRangeMax:" + fontRangeMax);
 
 
@@ -55,7 +56,7 @@ var Visualizer = function(data, elemID, w, h){
 			bb = placedWords[i].node().getBBox();
 
 			if((testBB.x + testBB.width > w - 25) || (testBB.x < 0 + 20) ||
-				(testBB.y + testBB.height > h - 20) || (testBB.y < 0 + 20) ||
+				(testBB.y + testBB.height > h - 15) || (testBB.y < 0 + 15) ||
 				checkIntersection(testBB, bb)){
 				fit = false; 
 				break;
@@ -65,7 +66,7 @@ var Visualizer = function(data, elemID, w, h){
 	};
 
 	var checkIntersection = function(a, b){
-		return (Math.abs(a.x - b.x) * 1.2 < (a.width + b.width)) &&
+		return (Math.abs(a.x - b.x) * 1.4 < (a.width + b.width)) &&
 			   (Math.abs(a.y - b.y) * 2.4 < (a.height + b.height));
 
 	};
@@ -74,31 +75,31 @@ var Visualizer = function(data, elemID, w, h){
 		var word = dataset[i].word;
 		var freq = dataset[i].frequency;
 		var fontSize = fontScale(freq);
-
-		if(firstTime){
-			centerPos.x -= 50;
-			firstTime = false;
-			fontSize += 10;
-		}
-		else centerPos.x = w/2;
 		
 		var text = svg.append("text")
 			.attr("x", centerPos.x)
 			.attr("y", centerPos.y)
 			.text(word)
-			.attr("font-family", "Comic Sans MS")
+			.attr("font-family", "monospace")
 			.attr("font-size", fontSize)
 			.attr("fill", fill(i));
 
-		for(var t = 0; t < 1200; t += 0.5){
+		for(var t = 0+i*10; t < 1200; t += 0.2){
+
+			if(firstTime){
+				var wid = text.node().getBBox().width;
+				text.attr("x", w/2 - wid/2);
+				firstTime = false;
+				fontSize += 7;
+			}
 			if(checkFit(text.node().getBBox())){
 				placedWords.push(text);
 				console.log("FIT");
 				break;
 			}
 			else{
-				text.attr("x", Math.floor(centerPos.x + genX(t) + getRandomNumber(-60,60)))
-					.attr("y", Math.floor(centerPos.y + genY(t)) + getRandomNumber(-20, 20));
+				text.attr("x", Math.floor(centerPos.x + genX(t) + getRandomNumber(-w/4,w/4)))
+					.attr("y", Math.floor(centerPos.y + genY(t)));
 			}
 		}
 	}

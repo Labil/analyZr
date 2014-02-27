@@ -19,7 +19,7 @@ Analyzer.prototype.analyze = function(elemID, language, maxWords){
 
 	this.jsonResult = this.sortWordsByFrequency(this.jsonResult);
 	if(this.jsonResult.length > 40)
-		this.jsonResult.length = maxWords || 40;
+		this.jsonResult.length = maxWords || 35;
 	return this.jsonResult;
 
 }
@@ -28,7 +28,7 @@ Analyzer.prototype.getWords = function(elemID){
 	//trim() removes whitespace from both sides of string 
 	//.sort() at the end for sorting in alphabetical order
 	var source = $('#' + elemID).val().toLowerCase().trim()
-								.replace(/[,;.!"]/g,'').replace(/\d+/g,'')
+								.replace(/[,;.!"%&#{}()=?+:><-_*-]/g,'').replace(/\d+/g,'')
 								.split(/[\s\/]+/g);
 	return source.slice(0);
 };
@@ -121,6 +121,6 @@ var Dictionary = {
 			       '-', 'måtte', 'andre'],
 	english : ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
 		         'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 
-		         'be', 'has', 'if', 'by', 'poeng', 'dager', 'siden', 
-		         'permalenkerapportergive', 'goldsvar', '::', ':', '-', ',', '.']
+		         'be', 'has', 'if', 'by', 'poeng', 'dager', 'siden', 'was', 'were',
+		         'it\'s', 'he', 'am', 'are', 'i\'m', 'or']
 };
