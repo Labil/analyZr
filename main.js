@@ -3,7 +3,7 @@ $(document).ready(function() {
 	var visualizer;
 
 	var btn = $(".btn").on('click', function(e){
-		var data = analyzer.analyze("textfield", "english");
+		var data = analyzer.analyze("textfield", "norwegian");
 
 		var inputElem = $('#input');
 		var w = inputElem.innerWidth();

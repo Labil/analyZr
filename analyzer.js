@@ -7,18 +7,19 @@ var Analyzer = function(){
 	this.jsonResult = [];
 };
 
-Analyzer.prototype.analyze = function(elemID, language){
+Analyzer.prototype.analyze = function(elemID, language, maxWords){
 	this.words = this.getWords(elemID);
 	this.ignore = this.initIgnore(language);
 	this.words = this.filterIgnore();
 	this.wordCount = this.words.length;
 	this.getFrequency(); //creates and object this.frequency
 	//TODO sort by freqency
-	this.minFrequency = this.scaleMinFrequency(this.wordCount);
+	//this.minFrequency = this.scaleMinFrequency(this.wordCount);
 	this.makeJSON(); //Makes jsonResult
 
-	console.log(this.jsonResult);
 	this.jsonResult = this.sortWordsByFrequency(this.jsonResult);
+	if(this.jsonResult.length > 40)
+		this.jsonResult.length = maxWords || 40;
 	return this.jsonResult;
 
 }
@@ -27,7 +28,7 @@ Analyzer.prototype.getWords = function(elemID){
 	//trim() removes whitespace from both sides of string 
 	//.sort() at the end for sorting in alphabetical order
 	var source = $('#' + elemID).val().toLowerCase().trim()
-								.replace(/[,;.!]/g,'').replace(/\d+/g,'')
+								.replace(/[,;.!"]/g,'').replace(/\d+/g,'')
 								.split(/[\s\/]+/g);
 	return source.slice(0);
 };
