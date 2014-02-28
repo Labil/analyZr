@@ -24,6 +24,7 @@ Visualizer.prototype.init = function(config){
 	this.spiralExpConst = config.spiralExpConst; //a
 
 	this.setupSVG(this.containerID);
+
 	this.visualize(function(){
 		console.log("Finished visalizing.");
 	});
@@ -63,6 +64,7 @@ Visualizer.prototype.setupSVG = function(elemID){
 };
 
 Visualizer.prototype.visualize = function(callback){
+
 	var firstTime = true;
 	var word, freq, fontSize;
 	for(var i = 0; i < this.dataset.length; i++){

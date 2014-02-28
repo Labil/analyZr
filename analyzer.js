@@ -13,12 +13,11 @@ Analyzer.prototype.analyze = function(elemID, language, maxWords){
 	this.words = this.filterIgnore();
 	this.wordCount = this.words.length;
 	this.getFrequency(); //creates and object this.frequency
-	//TODO sort by freqency
 	//this.minFrequency = this.scaleMinFrequency(this.wordCount);
 	this.makeJSON(); //Makes jsonResult
 
 	this.jsonResult = this.sortWordsByFrequency(this.jsonResult);
-	if(this.jsonResult.length > 40)
+	if(this.jsonResult.length > 35)
 		this.jsonResult.length = maxWords || 35;
 	return this.jsonResult;
 
@@ -53,13 +52,6 @@ Analyzer.prototype.filterIgnore = function(){
 		if(!found)
 			filtered.push(this.words[i]);	
 	}
-	
-	/*var filtered = this.words.filter(function(val){
-		for(var i = 0; i < this.ignore.length; i++){
-			if(this.ignore[i] == val) return false;
-		}
-		return true;
-	});*/
 	return filtered.slice(0);
 };
 
@@ -73,13 +65,11 @@ Analyzer.prototype.getFrequency = function(){
 
 //0.005 gives a fairy nice balance, but maybe do some more tests
 Analyzer.prototype.scaleMinFrequency = function(numWords){
-
 	var	num = Math.round(numWords * 0.001) + 1;
 	return num;
 };
 
 Analyzer.prototype.sortWordsByFrequency = function(arr){
-
 	var sortByFrequency = function(a, b){
 		var aFreq = a.frequency;
 		var bFreq = b.frequency;
@@ -102,9 +92,6 @@ Analyzer.prototype.makeJSON = function(){
 		}
 	}
 };
-
-
-
 
 ///////////////////////Dictionary///////////////////////////////////////////////
 
