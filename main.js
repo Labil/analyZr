@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	var analyzer = new Analyzer();
-	var visualizer;
+	var visualizer = new Visualizer();
 
 	var btn = $(".btn").on('click', function(e){
 		var data = analyzer.analyze("textfield", "english");
@@ -16,7 +16,16 @@ $(document).ready(function() {
 		outputElem.height(h);
 		outputElem.css('display', "inline");
 
-		visualizer = new Visualizer(data, "output", w, h);
+		visualizer.init({
+			data: data,
+			w: w,
+			h: h,
+			containerID: "output",
+			bgColor : "black",
+			fontFamily: "monospace",
+			spiralExpConst: 0.2
+
+		});
 	});
 
 });

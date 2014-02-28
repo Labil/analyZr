@@ -73,10 +73,8 @@ Analyzer.prototype.getFrequency = function(){
 
 //0.005 gives a fairy nice balance, but maybe do some more tests
 Analyzer.prototype.scaleMinFrequency = function(numWords){
-	console.log("Number of words is: " + numWords);
 
 	var	num = Math.round(numWords * 0.001) + 1;
-	console.log("Min freq: " + num);
 	return num;
 };
 
@@ -92,7 +90,6 @@ Analyzer.prototype.sortWordsByFrequency = function(arr){
 	/*arr = arr.sort(function(a,b){
 		return a.frequency.localeCompare(b.frequency);
 	});*/
-	console.log(arr);
 	return arr;
 };
 
