@@ -27,6 +27,7 @@ var Analyzer = function(){
 Analyzer.prototype.analyze = function(elemID, maxWords){
 	this.words = this.getWords(elemID);
 	this.ignore = this.currentDictionary.slice(0);
+	//console.log(this.ignore);
 	this.words = this.filterIgnore();
 	this.wordCount = this.words.length;
 	this.getFrequency(); //creates and object this.frequency

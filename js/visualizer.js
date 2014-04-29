@@ -3,7 +3,7 @@ var Visualizer = function(){
 
 Visualizer.prototype.init = function(config){
 	this.dataset = config.data.slice(0);
-	console.log("Dataset length: " + this.dataset.length);
+	//console.log("Dataset length: " + this.dataset.length);
 	this.containerID = config.containerID;
 	this.w = config.w;
 	this.h = config.h;
@@ -26,7 +26,7 @@ Visualizer.prototype.init = function(config){
 	this.setupSVG(this.containerID);
 
 	this.visualize(function(){
-		console.log("Finished visalizing.");
+		//console.log("Finished visalizing.");
 	});
 };
 //This function is a bit messy
@@ -90,7 +90,7 @@ Visualizer.prototype.visualize = function(callback){
 			}
 			if(this.checkFit(text.node().getBBox())){
 				this.placedWords.push(text);
-				console.log("FIT");
+				//console.log("FIT");
 				break;
 			}
 			else{

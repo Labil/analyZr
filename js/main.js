@@ -17,7 +17,7 @@ Main.prototype.setupStartAnalyzeEvent = function(){
 
 	$("#cloudify").on('click', function(e){
 		var limit = $('#maxWords').val();
-		console.log(limit);
+		//console.log(limit);
 
 		var data = self.analyzer.analyze("textfield", limit);
 
@@ -29,7 +29,7 @@ Main.prototype.setupStartAnalyzeEvent = function(){
 		var outputElem = $('#output');
 		outputElem.width(w);
 		outputElem.height(h);
-		outputElem.css('display', "inline");
+		outputElem.css('display', "inline-block");
 
 		self.visualizer.init({
 			data: data,
@@ -59,7 +59,6 @@ Main.prototype.setupIgnoreWords = function(){
 	var self = this;
 	$('#ignoreBtn').on('click', function(e){
 		e.preventDefault();
-		console.log("button clicked");
 		var word = $('#ignore').val();
 		if(word != ''){
 			self.updateDictionary(word);
@@ -84,7 +83,7 @@ Main.prototype.setupResetButton = function(){
 		//quick and dirty
 		$('#output').find('svg').remove();
 		$('#output').css('display', "none");
-		$('#input').css("display", "inline");
+		$('#input').css("display", "inline-block");
 
 	});
 };

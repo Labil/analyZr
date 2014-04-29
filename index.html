@@ -27,20 +27,20 @@
 					<div id="config">
 						<h2>Preferences</h2>
 						<div id="dictionary">
-							<p><b>Choose dictionary:</b></p>
+							<p class="pref"><b>Choose dictionary:</b></p>
 							<input class="checkbox" value="norwegian" checked="checked" type="checkbox" />Norwegian
 							<input class="checkbox" value="english" type="checkbox" />English
 						</div>
 						<br />
 						<div id="exception">
-							<p><b>Add words to ignore list:</b></p>
+							<p class="pref"><b>Add words to ignore list:</b></p>
 							<input id="ignore" value="" placeholder="" />
 							<button id="ignoreBtn">Add</button>
 						</div>
 						<br />
 						<br />
 						<div id="limit">
-							<p><b>Limit number of words:</b></p>
+							<p class="pref"><b>Limit number of words:</b></p>
 							<input id="maxWords" type="number" name="Limit" min="10" max="45" value="25" />
 						</div>
 					</div><!--End config-->
@@ -55,14 +55,9 @@
 						<div id="output">
 							<button id="reset" class="btn">Reset</button>
 						</div>
-						<div id="loading">
-							<center><img src="loading.gif" alt="Loading" />
-									<p>Loading...</p>
-							</center>
-						</div>
 
 						<div id="info">
-							<h3>Note for the paranoid</h3>
+							<h3>Note to the paranoid</h3>
 							<p>This application runs only in the browser and your text will not be saved anywhere!</p>
 						</div>
 					</div><!--End input-output-->

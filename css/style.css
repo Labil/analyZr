@@ -23,26 +23,25 @@
 
 /* contains inputfield & button */
 #input{
-	padding-top:20px;
+	margin-top: 20px;
 	padding-right: 0;
 	float: left;
+	width: 515px;
+	height: 451px;
 }
 
 /* contains image svg & save button */
 #output{
-	padding-top: 20px;
+	margin-top: 20px;
 	display: none;
 	float: left;
-}
-
-#loading{
-	padding-top: 20px;
-	display: none;
-	float: left;	
+	width: 515px;
+	height: 400px;
 }
 
 #textfield{
 	padding: 5px;
+	width: 505px;
 }
 
 /* contains dictionary, exceptions & limit , left side */
@@ -60,34 +59,36 @@
 	height: auto;
 }
 #dictionary{
-
+	width:200px;
 }
 
 #exception{
-
+	width: 200px;
 }
 
 #ignore{
 	float:left;
+	width: 153px;
 }
 #ignoreBtn{
 	float: left;
+	width: 39px;
 }
 
 #limit{
-
+	width: 200px;
 }
 
 #maxWords{
-	
+	width: 60px;
 }
 
 #footer{
+	position: absolute;
     font-family: "ClearLine";
     font-size: 2.5em; 
-    float: right;
-    margin-top: 60px;
-    margin-right: -20px;
+    bottom:-100px;
+    right:-80px;
 }
 
 /*Trick to center elements without a set width */
@@ -96,13 +97,11 @@
     float: right;
     right: 50%;
     position: relative;
-    pointer-events:none;
 }
 .inner-center {
     float: right;
     right: -50%;
     position: relative;
-    pointer-events:auto;
 }
 .clear {
     clear: both;
@@ -111,7 +110,10 @@
 a{
     text-decoration: none;
     color: black;
+}
 
+p.pref{
+	font-size: 15px;
 }
 
 @font-face {
