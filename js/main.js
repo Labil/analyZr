@@ -18,8 +18,6 @@ $(document).ready(function() {
 		outputElem.height(h);
 		outputElem.css('display', "inline");
 
-		
-
 		visualizer.init({
 			data: data,
 			w: w,

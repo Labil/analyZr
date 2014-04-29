@@ -1,7 +1,6 @@
 /* contains everything, centered*/
 #main{
 	margin: 0 auto;
-	position: relative;
 	min-width: 800px;
 	max-width: 80%;
 	font-family: sans-serif;
@@ -9,10 +8,8 @@
 
 /*description of project */
 #header{
-	position: relative;
 	margin: 0 auto;
-	min-width: 400px;
-	max-width: 60%;
+	width: 700px;
 	color:gray;
 	padding: 15px 30px 10px 30px;
 	margin-bottom: 10px;
@@ -20,8 +17,8 @@
 
 /* contains both #input & #image */
 #content{
-	position: relative;
 	margin: 0 auto;
+	height: auto;
 }
 
 /* contains inputfield & button */
@@ -52,9 +49,15 @@
 #config{
 	min-width: 200px;
 	max-width: 300px;
+	display: inline-block;
 	float: left;
 	padding: 5px 20px 30px 20px;
+}
 
+#input-output{
+	display: inline-block;
+	width: auto;
+	height: auto;
 }
 #dictionary{
 
@@ -80,11 +83,29 @@
 }
 
 #footer{
-    position: absolute;
     font-family: "ClearLine";
     font-size: 2.5em; 
-    margin-top:70px;
-    margin-left: 80px;
+    float: right;
+    margin-top: 60px;
+    margin-right: -20px;
+}
+
+/*Trick to center elements without a set width */
+/*pointer-events:none makes it so that it doesn't cover i.e. links underneath */
+.outer-center {
+    float: right;
+    right: 50%;
+    position: relative;
+    pointer-events:none;
+}
+.inner-center {
+    float: right;
+    right: -50%;
+    position: relative;
+    pointer-events:auto;
+}
+.clear {
+    clear: both;
 }
 
 a{
@@ -94,8 +115,15 @@ a{
 }
 
 @font-face {
-  font-family: "ClearLine";
-  src: url("ClearLine.ttf");
+  font-family: 'ClearLine';
+  src: url('../fonts/ClearLine.woff') format('woff'),
+       url('../fonts/ClearLine.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'KeyTabMetal';
+  src: url('../fonts/KeyTabMetal.woff') format('woff'),
+       url('../fonts/KeyTabMetal.ttf') format('truetype');
 }
 
 /* info arrow display on right side */
@@ -118,11 +146,13 @@ p.description{
 	margin-top: 10px;
 }
 p.title{
+	font-family: 'KeyTabMetal';
 	text-align: left;
 	float: left;
 	font-size: 2.5em;
 	color: black;
 	margin: 0;
+	margin-bottom: 10px;
 	margin-right: 15px;
 }
 

@@ -3,12 +3,12 @@
 <head>
 <title>CloudilyZer</title>
 	<!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript" src="d3/d3.v3.min.js" charset="utf-8"></script>
-	<script type="text/javascript" src="analyzer.js" charset="utf-8"></script>
-	<script type="text/javascript" src="visualizer.js" charset="utf-8"></script>
-	<script type="text/javascript" src="main.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/analyzer.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/visualizer.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/main.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -18,53 +18,79 @@
 			<p class="description">is a configurable client-side word frequency analyzer that generates a colorful wordcloud, based on the submitted text. Made for fun while learning javascript and D3.js while at <a href="https://www.hackerschool.com/" target="_blank">Hacker School</a>.</p>
 		</div>
 		
-		<!--<hr class="fancy-line"></hr>-->
+		<hr class="fancy-line"></hr>
 
 		<div id="content">
-			<div id="config">
-				<h2>Preferences</h2>
-				<div id="dictionary">
-					<p><b>Choose dictionary:</b></p>
-					<input type="checkbox" />Norwegian
-					<input type="checkbox" />English
-				</div>
-				<br />
-				<div id="exception">
-					<p><b>Add words to ignore list:</b></p>
-					<input id="ignore" value="" placeholder="" />
-					<button id="ignoreBtn">Add</button>
-				</div>
-				<br />
-				<br />
-				<div id="limit">
-					<p><b>Limit number of words:</b></p>
-					<input id="maxWords" type="number" name="Limit" min="10" max="45" value="30" />
-				</div>
-			</div>
-			<div id="input">
-				<textarea id="textfield" rows="25" cols="60" value="" placeholder="Paste in the text you wanna analyze!"></textarea>
-				<br />
-				<button class="btn">Cloudify!</button>
-			</div>
-			<div id="output">
-				<button class="btn">Save</button>
-			</div>
-			<div id="loading">
-				<center><img src="loading.gif" alt="Loading" />
-						<p>Loading...</p>
-				</center>
-			</div>
 
-			<div id="info">
-				<h3>Note for the paranoid</h3>
-				<p>This application runs only in the browser and your text will not be saved anywhere!</p>
-				<div id="footer">
-					<a href="http://sunshake.io">sunshake.io</a>
-				</div>
-			</div>
-		</div>
+			<div class="outer-center">
+				<div class="inner-center">
+					<div id="config">
+						<h2>Preferences</h2>
+						<div id="dictionary">
+							<p><b>Choose dictionary:</b></p>
+							<input id="norwegian" type="checkbox" />Norwegian
+							<input id="english" type="checkbox" />English
+						</div>
+						<br />
+						<div id="exception">
+							<p><b>Add words to ignore list:</b></p>
+							<input id="ignore" value="" placeholder="" />
+							<button id="ignoreBtn">Add</button>
+						</div>
+						<br />
+						<br />
+						<div id="limit">
+							<p><b>Limit number of words:</b></p>
+							<input id="maxWords" type="number" name="Limit" min="10" max="45" value="30" />
+						</div>
+					</div><!--End config-->
 
-	</div>
+					<div id="input-output">
+						<div id="input">
+							<textarea id="textfield" rows="25" cols="60" value="" placeholder="Paste in the text you wanna analyze!"></textarea>
+							<br />
+							<button class="btn">Cloudify!</button>
+						</div><!--End input-->
+
+						<div id="output">
+							<button class="btn">Save</button>
+						</div>
+						<div id="loading">
+							<center><img src="loading.gif" alt="Loading" />
+									<p>Loading...</p>
+							</center>
+						</div>
+
+						<div id="info">
+							<h3>Note for the paranoid</h3>
+							<p>This application runs only in the browser and your text will not be saved anywhere!</p>
+						</div>
+					</div><!--End input-output-->
+					<div id="footer">
+						<a href="http://hakestad.io">hakestad.io</a>
+					</div>
+				</div><!--end inner-center-->
+			</div><!--Endt outer-center-->
+			<div class="clear"></div>
+			
+		</div><!--End content-->
+	</div><!--End main-->
+	<script>
+		(function(){
+			$(window).on('resize', function(){
+			      var win = $(this); //this = window
+			      var info = $('#info');
+
+			      if(win.width() <= 1200){
+			      	info.hide();
+			      }
+			      else if(win.width() > 1200){
+			      	info.show();
+			      }
+			});
+			$(window).trigger('resize');
+		})();
+	</script>
 
 
 </body>
