@@ -9,12 +9,13 @@ Main.prototype.init = function(config){
 	this.setupIgnoreWords();
 	this.setupCheckboxes();
 	this.setupStartAnalyzeEvent();
+	this.setupResetButton();
 };
 
 Main.prototype.setupStartAnalyzeEvent = function(){
 	var self = this;
 
-	$(".btn").on('click', function(e){
+	$("#cloudify").on('click', function(e){
 		var limit = $('#maxWords').val();
 		console.log(limit);
 
@@ -75,6 +76,17 @@ Main.prototype.updateDictionary = function(word){
 Main.prototype.setDictionary = function(language){
 	if(language == "norwegian") this.analyzer.currentDictionary = this.analyzer.dictionary.norwegian;
 	else if(language == "english") this.analyzer.currentDictionary = this.analyzer.dictionary.english;
+};
+
+Main.prototype.setupResetButton = function(){
+	$('#reset').on('click', function(e){
+		e.preventDefault();
+		//quick and dirty
+		$('#output').find('svg').remove();
+		$('#output').css('display', "none");
+		$('#input').css("display", "inline");
+
+	});
 };
 
 Main.prototype.setupWindowResize = function(){

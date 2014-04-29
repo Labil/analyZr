@@ -27,8 +27,6 @@ var Analyzer = function(){
 Analyzer.prototype.analyze = function(elemID, maxWords){
 	this.words = this.getWords(elemID);
 	this.ignore = this.currentDictionary.slice(0);
-	console.log(this.ignore);
-	//this.ignore = this.initIgnore(language);
 	this.words = this.filterIgnore();
 	this.wordCount = this.words.length;
 	this.getFrequency(); //creates and object this.frequency
@@ -49,14 +47,6 @@ Analyzer.prototype.getWords = function(elemID){
 								.replace(/[,;.!"%&#{}()=?+:><-_*-]/g,'').replace(/\d+/g,'')
 								.split(/[\s\/]+/g);
 	return source.slice(0);
-};
-
-Analyzer.prototype.initIgnore = function(language){
-	var dictionary = [];
-	if(language == "norwegian") dictionary = this.dictionary.norwegian;
-	else if(language == "english") dictionary = this.dictionary.english;
-
-	return dictionary.slice(0);
 };
 
 Analyzer.prototype.filterIgnore = function(){
