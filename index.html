@@ -28,8 +28,8 @@
 						<h2>Preferences</h2>
 						<div id="dictionary">
 							<p><b>Choose dictionary:</b></p>
-							<input id="norwegian" type="checkbox" />Norwegian
-							<input id="english" type="checkbox" />English
+							<input class="checkbox" value="norwegian" checked="checked" type="checkbox" />Norwegian
+							<input class="checkbox" value="english" type="checkbox" />English
 						</div>
 						<br />
 						<div id="exception">
@@ -41,7 +41,7 @@
 						<br />
 						<div id="limit">
 							<p><b>Limit number of words:</b></p>
-							<input id="maxWords" type="number" name="Limit" min="10" max="45" value="30" />
+							<input id="maxWords" type="number" name="Limit" min="10" max="45" value="25" />
 						</div>
 					</div><!--End config-->
 
@@ -77,18 +77,9 @@
 	</div><!--End main-->
 	<script>
 		(function(){
-			$(window).on('resize', function(){
-			      var win = $(this); //this = window
-			      var info = $('#info');
+			var main = new Main();
+			main.init({});
 
-			      if(win.width() <= 1200){
-			      	info.hide();
-			      }
-			      else if(win.width() > 1200){
-			      	info.show();
-			      }
-			});
-			$(window).trigger('resize');
 		})();
 	</script>
 

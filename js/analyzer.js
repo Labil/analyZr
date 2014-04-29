@@ -5,11 +5,30 @@ var Analyzer = function(){
 	this.frequency = {};
 	this.minFrequency = 1;
 	this.jsonResult = [];
+
+	this.dictionary = {
+		norwegian : ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 
+					   'to', 'tre', 'kanskje', 'ganske', 'av', 'de', 'dro', 'fikk',
+					   'på', 'så', 'som', 'hadde', 'men', 'om', 'så', 'å', 'på',
+					   'veldig', 'rundt', 'masse', 'at', 'bare', 'ble', 'det',
+				       'er', 'etter', 'for', 'i', 'gikk', 'ha', 'ham', 'han', 
+				       'har', 'ikke', 'kom', 'sa', 'seg', 'meg', 'skulle', 'ville',
+				       '-', 'måtte', 'andre', '_', '-', '–'],
+		english : ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
+			         'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 
+			         'be', 'has', 'if', 'by', 'poeng', 'dager', 'siden', 'was', 'were',
+			         'it\'s', 'he', 'am', 'are', 'i\'m', 'or', '_', '-', '–']
+	};
+
+	//Hard code in the default value cause I am quickly testing something
+	this.currentDictionary = this.dictionary.norwegian;
 };
 
-Analyzer.prototype.analyze = function(elemID, language, maxWords){
+Analyzer.prototype.analyze = function(elemID, maxWords){
 	this.words = this.getWords(elemID);
-	this.ignore = this.initIgnore(language);
+	this.ignore = this.currentDictionary.slice(0);
+	console.log(this.ignore);
+	//this.ignore = this.initIgnore(language);
 	this.words = this.filterIgnore();
 	this.wordCount = this.words.length;
 	this.getFrequency(); //creates and object this.frequency
@@ -34,8 +53,8 @@ Analyzer.prototype.getWords = function(elemID){
 
 Analyzer.prototype.initIgnore = function(language){
 	var dictionary = [];
-	if(language == "norwegian") dictionary = Dictionary.norwegian;
-	else if(language == "english") dictionary = Dictionary.english;
+	if(language == "norwegian") dictionary = this.dictionary.norwegian;
+	else if(language == "english") dictionary = this.dictionary.english;
 
 	return dictionary.slice(0);
 };
@@ -91,20 +110,4 @@ Analyzer.prototype.makeJSON = function(){
 			this.jsonResult.push( { "word" : key, "frequency" : this.frequency[key] } );
 		}
 	}
-};
-
-///////////////////////Dictionary///////////////////////////////////////////////
-
-var Dictionary = {
-	norwegian : ['en', 'jeg', 'litt', 'med', 'og', 'på', 'til', 'var', 'fra', 'å', 
-				   'to', 'tre', 'kanskje', 'ganske', 'av', 'de', 'dro', 'fikk',
-				   'på', 'så', 'som', 'hadde', 'men', 'om', 'så', 'å', 'på',
-				   'veldig', 'rundt', 'masse', 'at', 'bare', 'ble', 'det',
-			       'er', 'etter', 'for', 'i', 'gikk', 'ha', 'ham', 'han', 
-			       'har', 'ikke', 'kom', 'sa', 'seg', 'meg', 'skulle', 'ville',
-			       '-', 'måtte', 'andre'],
-	english : ['and', 'the', 'to', 'a', 'of', 'for', 'as', 'i', 'with', 'have', 
-		         'you', 'it', 'is', 'on', 'that', 'this', 'can', 'in', 
-		         'be', 'has', 'if', 'by', 'poeng', 'dager', 'siden', 'was', 'were',
-		         'it\'s', 'he', 'am', 'are', 'i\'m', 'or']
 };
